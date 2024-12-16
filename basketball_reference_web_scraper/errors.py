@@ -21,7 +21,7 @@ class InvalidPlayerAndSeason(Exception):
             .format(player_identifier=player_identifier, season_end_year=season_end_year)
         super().__init__(message)
 
-class InvalidTeam(Exception):
+class InvalidTeamSeason(Exception):
     def __init__(self, team, year):
         message = "Team \"{team}\" in {year} is invalid".format(team=team, year=year)
         super().__init__(message)

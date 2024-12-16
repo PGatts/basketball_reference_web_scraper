@@ -7,7 +7,7 @@ from basketball_reference_web_scraper.data import TEAM_TO_TEAM_ABBREVIATION, Tea
 from basketball_reference_web_scraper.errors import InvalidDate, InvalidPlayerAndSeason
 from basketball_reference_web_scraper.html import DailyLeadersPage, PlayerSeasonBoxScoresPage, PlayerSeasonTotalTable, \
     PlayerAdvancedSeasonTotalsTable, PlayByPlayPage, SchedulePage, BoxScoresPage, DailyBoxScoresPage, SearchPage, \
-    PlayerPage, StandingsPage, TeamRoster
+    PlayerPage, StandingsPage, TeamSeasonPage
 
 
 class HTTPService:
@@ -196,15 +196,15 @@ class HTTPService:
             for box_score in self.team_box_score(game_url_path=game_url_path)
         ]
 
-    def get_team_roster(self, team, year):
-        url = "{BASE_URL}/teams/{team}/{year}.html".format(BASE_URL=HTTPService.BASE_URL, team=team, year=year)
+    def get_team_roster(self, team, season_end_year):
+        url = "{BASE_URL}/teams/{team}/{season_end_year}.html".format(BASE_URL=HTTPService.BASE_URL, team=team, season_end_year=season_end_year)
 
         response = requests.get(url=url)
 
         response.raise_for_status()
 
-        page = TeamRoster(html=html.fromstring(response.content))
-        return page.team_roster
+        page = TeamSeasonPage(html=html.fromstring(response.content))
+        return [{'slug': row.slug, 'name': row.name} for row in page.rows]
 
 
     def search(self, term):
